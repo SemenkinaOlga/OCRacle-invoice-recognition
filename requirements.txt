@@ -1,0 +1,15 @@
+pytesseract
+pillow
+python-doctr
+pdf2image
+opencv-python
+torch
+transformers
+datasets
+langchain-community
+langchain-classic
+langchain-core
+langchain-text-splitters
+matplotlib
+PyMuPDF
+numpy
