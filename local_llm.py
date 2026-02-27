@@ -124,4 +124,4 @@ def ask_local_llm(llm_params: LlmParameters, text: str):
             break
 
     print("LLM can't find an answer :(")
-    return json.dumps("{}")
+    return json.dumps({})
