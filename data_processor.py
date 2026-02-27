@@ -1,5 +1,6 @@
 from PIL import Image
 import os
+import re
 from pdf2image import convert_from_path
 from enum import Enum
 import pymupdf
@@ -25,6 +26,18 @@ mat = pymupdf.Matrix(4, 4)
 class PdfConverter(Enum):
     pdf2image = 1
     pymupdf = 2
+
+
+def find_invoice_number(text):
+    pattern = r'Invoice\s*(?:no\.?|#)?\s*:?\s*(\S*\d+\S*)'
+    match = re.search(pattern, text, re.IGNORECASE)
+    print('text')
+    print(text)
+    print('match')
+    print(match)
+    if match:
+        return match.group(1)
+    return None
 
 
 # Function to write a JSON file in the output folder

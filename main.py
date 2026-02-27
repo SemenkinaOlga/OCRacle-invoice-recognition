@@ -30,20 +30,25 @@ for invoice in data_images:
     # Step 2: Run NER to extract structured entities
     print('Run NER')
     response = ner.run_ner(image, text, dp.path_model, params.nerMethod)
+    result_dict = json.loads(response)
 
-    # Step 3: Save structured NER output to JSON file
-    result_json = json.loads(response)
-    dp.write_result_json(invoice, result_json)
+    # Step 3: If NER method didn't find Invoice Number, try RegEx
+    if "Invoice Number" not in result_dict:
+        invoice_number = dp.find_invoice_number(text)
+        result_dict["Invoice Number"] = invoice_number
 
-    # Step 4: Prepare data for visualization
+    # Step 4: Save structured NER output to JSON file
+    dp.write_result_json(invoice, result_dict)
+
+    # Step 5: Prepare data for visualization
     # Extract all non-empty values from NER result
-    words = [result_json[field] for field in result_json if not None]
+    words = [result_dict[field] for field in result_dict if not None]
     words = [str(word) for word in words if len(word) > 0]
     # Create a mapping from word value to field name for labels
-    titles_dict = {v: k for k, v in result_json.items() if v in words}
+    titles_dict = {v: k for k, v in result_dict.items() if v in words}
 
-    # Step 5: Draw bounding boxes and labels on the original image
+    # Step 6: Draw bounding boxes and labels on the original image
     boxed_img = imgp.draw_boxes(image, ocr_result, words, titles_dict)
 
-    # Step 6: Save the annotated image to the output folder
+    # Step 7: Save the annotated image to the output folder
     dp.write_image(invoice, boxed_img)
