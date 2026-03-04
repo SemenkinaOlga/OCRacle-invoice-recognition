@@ -50,6 +50,9 @@ python main.py
 
     * Transformer model Donut (donut-base-finetuned-invoices) from Hugging Face (auto-downloaded on first run)
 
+    * Transformer model Donut fine-tuned for invoices (mychen76/invoice-and-receipts_donut_v1) from Hugging Face (auto-downloaded on first run)
+
+    * Complex custom RegEx patterns to parse fields 'Invoice number', 'Invoice date', 'Tax', 'Shipping' and 'Total' from ocr results
 
 * 📦 **Structured Output** – Saves extracted invoice data as JSON per document.
 
@@ -72,7 +75,7 @@ python main.py
     * Risk of hallucinations in extracted fields.
   
 
-* 🍩 **Donut Performance** (donut-base-finetuned-invoices) 
+* 🍩 **Donut Performance**
 
     * Low accuracy despite invoice fine-tuning.
 
@@ -81,7 +84,7 @@ python main.py
   
 * 🛠️ **Code Quality**
 
-    * Currently processes only the first page/image of a PDF, and doesn't fully support multipage invoices.
+    * Currently, processes only the first page/image of a PDF, and doesn't fully support multipage invoices.
   
     * Code needs refactoring for clarity and maintainability.
   
@@ -135,8 +138,6 @@ python main.py
 
 ### 🔬 Other tried methods
 * **spaCy NER** – Classic NLP library, but gave poor results on example invoices. Requires downgrade to Python 3.12 due to dependency issues.
-
-* **Python re & Custom Rules** – Works only for limited, fixed invoice templates. Fails on varied formats.
 
 * **Ollama LLMs** – Solid framework for local LLMs, but requires separate installation alongside Tesseract.
 
