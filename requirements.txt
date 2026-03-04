@@ -13,3 +13,5 @@ langchain-text-splitters
 matplotlib
 PyMuPDF
 numpy
+pytest
+python-dateutil

@@ -10,7 +10,7 @@ class Parameters:
     def __init__(self):
         self.pdfConverter = dp.PdfConverter.pymupdf
         self.ocrMethod = ocr.OcrMethod.pytesseract
-        self.nerMethod = ner.NerMethod.donut
+        self.nerMethod = ner.NerMethod.key_words_extractor
 
 params = Parameters()
 
@@ -29,7 +29,7 @@ for invoice in data_images:
 
     # Step 2: Run NER to extract structured entities
     print('Run NER')
-    response = ner.run_ner(image, text, dp.path_model, params.nerMethod)
+    response = ner.run_ner(image, text, ocr_result, dp.path_model, params.nerMethod)
     result_dict = json.loads(response)
 
     # Step 3: If NER method didn't find Invoice Number, try RegEx
@@ -42,7 +42,7 @@ for invoice in data_images:
 
     # Step 5: Prepare data for visualization
     # Extract all non-empty values from NER result
-    words = [result_dict[field] for field in result_dict if not None]
+    words = [result_dict[field] for field in result_dict if result_dict[field] is not None]
     words = [str(word) for word in words if len(word) > 0]
     # Create a mapping from word value to field name for labels
     titles_dict = {v: k for k, v in result_dict.items() if v in words}
