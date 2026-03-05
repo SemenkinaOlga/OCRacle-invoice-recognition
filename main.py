@@ -1,7 +1,7 @@
 import json
 
 import data_processor as dp
-import ner as ner
+import ner.ner_runner as ner
 import ocr as ocr
 import img_processor as imgp
 
