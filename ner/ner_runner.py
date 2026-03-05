@@ -1,10 +1,8 @@
 from enum import Enum
 
-import local_llm as lllm
-import donut
+from ner.local import donut, mychen76_donut as mcd, local_llm as lllm, keywords_extraction as kwe
 import data_processor as dp
-import mychen76_donut as mcd
-import keywords_extraction as kwe
+import test_ner as tn
 
 
 # Enum to select the NER method
@@ -13,10 +11,12 @@ class NerMethod(Enum):
     donut = 2
     mychen_donut = 3
     key_words_extractor = 4
+    test = 999
 
 # Initialize DonutRunner with the model path from data_processor
 donut_runner = donut.DonutRunner(dp.path_model)
 mc_donut_runner = mcd.MychenDonutTestRunner(dp.path_model)
+test_runner = tn.TestRunner(dp.path_model)
 keyWordsExtractor = kwe.KeyWordsExtractor()
 
 # Wrapper function to run NER based on selected method
@@ -30,5 +30,7 @@ def run_ner(image, text: str, ocr_result, path, ner_method: NerMethod = NerMetho
         return mc_donut_runner.run_donut(image, text)
     elif ner_method == NerMethod.key_words_extractor:
         return keyWordsExtractor.run(ocr_result)
+    elif ner_method == NerMethod.test:
+        return test_runner.run_test_model(image, text, ocr_result)
     else:
         return []

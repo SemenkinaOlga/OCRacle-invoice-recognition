@@ -2,7 +2,6 @@ from transformers import DonutProcessor, AutoModelForImageTextToText
 import os
 import re
 import json
-import timeit
 
 class DonutRunner:
     """

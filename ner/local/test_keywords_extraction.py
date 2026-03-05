@@ -1,4 +1,4 @@
-import keywords_extraction as kwe
+from ner.local import keywords_extraction as kwe
 import pytest
 
 
