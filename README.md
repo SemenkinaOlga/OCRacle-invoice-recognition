@@ -51,6 +51,8 @@ python main.py
     * Transformer model Donut (donut-base-finetuned-invoices) from Hugging Face (auto-downloaded on first run)
 
     * Transformer model Donut fine-tuned for invoices (mychen76/invoice-and-receipts_donut_v1) from Hugging Face (auto-downloaded on first run)
+  
+    * LayoutLM for Invoices from Hugging Face impira/layoutlm-invoices (auto-downloaded on first run)
 
     * Complex custom RegEx patterns to parse fields 'Invoice number', 'Invoice date', 'Tax', 'Shipping' and 'Total' from ocr results
 
@@ -117,15 +119,13 @@ python main.py
 
 * 🧠 **NER Improvements**
 
-    * Test alternative LLMs better suited for structured extraction (LayoutLM, LayoutXLM, LayoutLMv3).
+    * Test alternative LLMs and transformers.
 
     * Improve prompt engineering (strict schema enforcement, double prompting, etc.).
 
     * Optimize output validation with automatic retry and correction prompts.
 
     * Fine-tune a custom LLM on a domain-specific dataset.
-
-    * Replace Donut with more robust document-understanding models fine-tuned for invoices.
 
 
 * 🤝 **Ensemble Strategy**
