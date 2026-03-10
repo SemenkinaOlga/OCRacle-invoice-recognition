@@ -27,19 +27,6 @@ class PdfConverter(Enum):
     pdf2image = 1
     pymupdf = 2
 
-
-def find_invoice_number(text):
-    pattern = r'Invoice\s*(?:no\.?|#)?\s*:?\s*(\S*\d+\S*)'
-    match = re.search(pattern, text, re.IGNORECASE)
-    print('text')
-    print(text)
-    print('match')
-    print(match)
-    if match:
-        return match.group(1)
-    return None
-
-
 # Function to write a JSON file in the output folder
 def write_result_json(name, result_json):
     file_name = os.path.join(path_output, name + '.json')
