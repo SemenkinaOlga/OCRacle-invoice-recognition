@@ -6,14 +6,12 @@ from enum import Enum
 class OcrMethod(Enum):
     pytesseract = 1
 
-# Function to perform OCR using pytesseract
 def ocr_pytesseract(image):
     ocr_result = pytesseract.image_to_data(image, output_type=pytesseract.Output.DICT)
     text = re.sub(' +', ' ', " ".join(ocr_result['text']))
-
     return text, ocr_result
 
-# Wrapper function to run OCR based on selected method
+# Wrapper to run OCR
 def run_ocr(path, ocr_method: OcrMethod = OcrMethod.pytesseract):
     if ocr_method == OcrMethod.pytesseract:
         return ocr_pytesseract(path)

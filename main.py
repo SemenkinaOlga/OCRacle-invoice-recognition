@@ -5,7 +5,7 @@ import ner.ner_runner as ner
 import ocr as ocr
 import img_processor as imgp
 
-# Class to store configuration for this pipeline run
+# Pipeline configuration
 class Parameters:
     def __init__(self):
         self.pdfConverter = dp.PdfConverter.pymupdf
@@ -17,7 +17,6 @@ params = Parameters()
 # Load all files (PDFs/images) from the data folder and convert PDFs to images
 data_images = dp.get_images(False, params.pdfConverter)
 
-# Loop through all invoices/images
 for invoice in data_images:
     print('Process invoice ' + invoice)
     # Take the first page/image for each file
