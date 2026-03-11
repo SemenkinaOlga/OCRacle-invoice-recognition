@@ -28,7 +28,6 @@ class MychenDonutTestRunner:
             model = VisionEncoderDecoderModel.from_pretrained(self.model_id)
             processor = DonutProcessor.from_pretrained(self.model_id)
 
-            # Save into your directory
             os.makedirs(self.save_path, exist_ok=True)
             model.save_pretrained(self.save_path)
             processor.save_pretrained(self.save_path)

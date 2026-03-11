@@ -15,7 +15,7 @@ output_parser = JsonOutputParser()
 
 class LlmParameters:
     """
-    Class stores configuration parameters for the local LLM
+    Class stores configuration parameters for the local LLM mistral
     """
     def __init__(self, path_model):
         self.max_new_tokens = 1048
@@ -36,7 +36,6 @@ If can't find a field in the document context, just leave value empty in JSON fo
 Do not add any additional words or symbols except valid JSON format itself so I can parse it easily. 
  """
 
-# Setup a local LLM using CTransformers
 def setup_llm(params: LlmParameters):
     return CTransformers(model=params.model_path,
                          model_type=params.model_type,
@@ -44,7 +43,7 @@ def setup_llm(params: LlmParameters):
                          temperature=params.temperature
                          )
 
-# Ingest text, split into chunks, and build vector store for retrieval
+# Build vector store for retrieval
 def run_ingest(params: LlmParameters, text: str):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=params.chunk_size,
                                                    chunk_overlap=params.chunk_overlap,
@@ -65,7 +64,6 @@ def set_qa_prompt(params: LlmParameters):
                           partial_variables={"format_instruction": output_parser.get_format_instructions()})
 
 
-# Build a retrieval-based QA chain
 def build_retrieval_qa_chain(llm, prompt, vectorstore, params: LlmParameters):
     retriever = vectorstore.as_retriever(search_kwargs={'k': params.vector_count})
 
@@ -85,7 +83,7 @@ def setup_qa_chain(vectorstore, params: LlmParameters):
 
     return qa_chain
 
-# Run the full LLM extraction pipeline on a given text
+# Run the full LLM extraction pipeline
 def run_llm(llm_params: LlmParameters, text: str):
     start = timeit.default_timer()
     vectors = run_ingest(llm_params, text)

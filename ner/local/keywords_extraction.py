@@ -25,6 +25,7 @@ def build_tokens(ocr_result):
     return tokens
 
 def group_into_lines(tokens, y_threshold=10):
+    # Combine individual words in boxes into a line of text as in the document
     tokens = sorted(tokens, key=lambda x: (x["top"], x["left"]))
 
     lines = []
@@ -73,6 +74,7 @@ money_pattern = rf'(?:{currency_before}|{currency_after}|{space_thousand}|{plain
 clean_money_pattern = r'\d{1,3}(?:[,\s]\d{3})+(?:[.,]\d+)?|\d+(?:[.,]\d+)?'
 
 def clean_currency(money):
+    # Remove currency symbol from a previously found amount of money
     money = re.sub(r'[£$€¥₹]\s*', '', money)
     money = re.sub(r'\s*[£$€¥₹]', '', money)
     return money

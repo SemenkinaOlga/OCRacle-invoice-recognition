@@ -28,7 +28,6 @@ class DonutRunner:
             model = AutoModelForImageTextToText.from_pretrained(self.model_id)
             processor = DonutProcessor.from_pretrained(self.model_id)
 
-            # Save into your directory
             os.makedirs(self.save_path, exist_ok=True)
             model.save_pretrained(self.save_path)
             processor.save_pretrained(self.save_path)
@@ -40,7 +39,6 @@ class DonutRunner:
     def prepare_model(self):
         self.model, self.processor = self.load_or_download_model()
 
-
     def run_donut(self, image):
         # Ensure model is loaded only once
         if not self.model_loaded:
@@ -49,7 +47,6 @@ class DonutRunner:
 
         pixel_values = self.processor(image, return_tensors="pt").pixel_values
 
-        # Generate predicted output
         outputs = self.model.generate(pixel_values)
         predicted_text = self.processor.batch_decode(outputs, skip_special_tokens=True)[0]
 
@@ -60,15 +57,12 @@ class DonutRunner:
         for key, value in matches:
             dict_res[key] = value
 
-        # Map Donut keys to human-readable field names
+        # Map Donut keys to field names
         result = {}
         if 'InvoiceNumber' in dict_res: result["Invoice Number"] = dict_res['InvoiceNumber']
         if 'TaxAmount1' in dict_res: result["Tax"] = dict_res['TaxAmount1']
         if 'GrossAmount' in dict_res: result["Total"] = dict_res['GrossAmount']
         if 'DocumentDate' in dict_res: result["Invoice date"] = dict_res['DocumentDate']
-
-        print('Found entities: ')
-        print(result)
 
         return json.dumps(result)
 

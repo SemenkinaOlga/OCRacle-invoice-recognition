@@ -39,15 +39,11 @@ class PipelineRunner:
         output = {}
         for field, question in questions.items():
             answer = self.pipeline(image, question=question)
-            print(answer)
             score = answer[0]["score"]
             value = answer[0]["answer"]
 
             if score >= self.CONFIDENCE_THRESHOLD:
                 output[field] = value
-
-        print("\nFinal extracted fields:")
-        print(output)
 
         return json.dumps(output)
 
