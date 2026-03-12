@@ -1,7 +1,7 @@
 from PIL import Image
+import io
 import os
-import re
-from pdf2image import convert_from_path
+from pdf2image import convert_from_path, convert_from_bytes
 from enum import Enum
 import pymupdf
 import json
@@ -89,13 +89,19 @@ def get_all_file_names() -> dict:
     return files
 
 # PDF conversion using pdf2image
-def convert_pdf_to_image_pdf2image(path):
+def convert_pdf_to_image_pdf2image(path=None, pdf_bytes=None):
+    if pdf_bytes is not None:
+        return convert_from_bytes(pdf_bytes)
     return convert_from_path(path)
 
 # PDF conversion using pymupdf
-def convert_pdf_to_image_pymupdf(path):
+def convert_pdf_to_image_pymupdf(path=None, pdf_bytes=None):
     images = []
-    doc = pymupdf.open(path)
+    if pdf_bytes is not None:
+        doc = pymupdf.open(stream=pdf_bytes, filetype="pdf")
+    else:
+        doc = pymupdf.open(path)
+
     for page_num in range(doc.page_count):
         page = doc.load_page(page_num)
         pixmap = page.get_pixmap(dpi=300, matrix=mat)
@@ -104,11 +110,11 @@ def convert_pdf_to_image_pymupdf(path):
 
 
 # Wrapper function to run PDF conversion based on selected method
-def convert_pdf_to_image(path, pdf_converter:PdfConverter=PdfConverter.pdf2image):
+def convert_pdf_to_image(path=None, pdf_bytes=None, pdf_converter:PdfConverter=PdfConverter.pdf2image):
     if pdf_converter == PdfConverter.pdf2image:
-        return convert_pdf_to_image_pdf2image(path)
+        return convert_pdf_to_image_pdf2image(path, pdf_bytes)
     elif pdf_converter == PdfConverter.pymupdf:
-        return convert_pdf_to_image_pymupdf(path)
+        return convert_pdf_to_image_pymupdf(path, pdf_bytes)
     else: return []
 
 # Function to save a temporary image file if needed
@@ -147,3 +153,20 @@ def get_images(save_tmp_files:bool=False, pdf_converter:PdfConverter=PdfConverte
             print (file_extension, " is an unknown file format.")
 
     return image_files
+
+# Main function to get images from all files in the data folder
+def get_image(file_bytes, file_ext, pdf_converter:PdfConverter=PdfConverter.pdf2image):
+    image = None
+
+    if file_ext in {'pdf'}:
+        image = convert_pdf_to_image(None, file_bytes, pdf_converter)[0]
+    elif file_ext in {'jpg'}:
+        image = Image.open(io.BytesIO(file_bytes))
+    elif file_ext in {'png'}:
+        img = Image.open(io.BytesIO(file_bytes))
+        # Convert PNG to JPG-like RGB format
+        image = img.convert('RGB')
+    else:
+        print (file_ext, " is an unknown file format.")
+
+    return image
