@@ -11,6 +11,17 @@ import ner.ner_runner as ner
 import ocr as ocr
 import img_processor as imgp
 
+import subprocess
+
+# Find where tesseract is installed
+result = subprocess.run(['which', 'tesseract'], capture_output=True, text=True)
+st.write("Which:", result.stdout)
+
+result2 = subprocess.run(['find', '/usr', '-name', 'tesseract'], capture_output=True, text=True)
+st.write("Find:", result2.stdout)
+
+
+
 
 params = inv_rec.Parameters()
 
