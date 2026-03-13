@@ -3,6 +3,7 @@ pillow
 python-doctr
 pdf2image
 opencv-python
+opencv-python-headless
 torch
 transformers
 datasets
