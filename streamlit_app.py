@@ -16,7 +16,8 @@ params = inv_rec.Parameters()
 
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
 
-st.set_page_config(layout="wide", page_title="OCRacle-invoice-recognition")
+st.set_page_config(layout="wide")
+st.title("💻️🔮✨ OCRacle-invoice-recognition")
 
 st.write("## Get data from your invoice by OCRacle")
 st.write(
@@ -24,7 +25,7 @@ st.write(
 )
 
 st.write(
-    "This app is open source and code available on [GitHub](https://github.com/SemenkinaOlga/OCRacle-invoice-recognition). Created by [Olga Semenkina](https://www.linkedin.com/in/olga-semenkina/)."
+    "This app is open source and code available on 💻[GitHub](https://github.com/SemenkinaOlga/OCRacle-invoice-recognition). Created by 💼[Olga Semenkina](https://www.linkedin.com/in/olga-semenkina/)."
 )
 
 # Inject custom CSS to change progress bar color
@@ -104,16 +105,16 @@ def run_recognition(upload):
         boxed_img = imgp.draw_boxes(image, ocr_result, words, titles_dict)
 
         # Display images
-        col1.write("### Original Image")
+        col1.write("### 🖼️ Original Image")
         col1.image(image)
 
-        col2.write("### What was found")
+        col2.write("### 🎯 What was found")
         col2.image(boxed_img)
 
         # Prepare download button
         st.sidebar.markdown("\n")
         st.sidebar.download_button(
-            "Download image",
+            "📥 Download image",
             convert_image(boxed_img),
             "imvoice.png",
             "image/png"
@@ -131,7 +132,7 @@ def run_recognition(upload):
 
 st.sidebar.write("## Settings")
 
-st.sidebar.write("## Upload and download")
+st.sidebar.write("## 📤 Upload and download")
 
 col1, col2 = st.columns(2)
 my_upload = st.sidebar.file_uploader("Upload an invoice", type=["png", "jpg", "jpeg", "pdf"])
