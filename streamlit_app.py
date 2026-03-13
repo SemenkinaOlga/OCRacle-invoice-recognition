@@ -11,22 +11,10 @@ import ner.ner_runner as ner
 import ocr as ocr
 import img_processor as imgp
 
-import subprocess
-
-# Find where tesseract is installed
-result = subprocess.run(['which', 'tesseract'], capture_output=True, text=True)
-st.write("Which:", result.stdout)
-
-result2 = subprocess.run(['find', '/usr', '-name', 'tesseract'], capture_output=True, text=True)
-st.write("Find:", result2.stdout)
-
-
-
 
 params = inv_rec.Parameters()
 
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
-MAX_IMAGE_SIZE = 2000  # pixels
 
 st.set_page_config(layout="wide", page_title="OCRacle-invoice-recognition")
 
@@ -38,6 +26,17 @@ st.write(
 st.write(
     "This app is open source and code available on [GitHub](https://github.com/SemenkinaOlga/OCRacle-invoice-recognition). Created by [Olga Semenkina](https://www.linkedin.com/in/olga-semenkina/)."
 )
+
+# Inject custom CSS to change progress bar color
+st.markdown("""
+    <style>
+    .stProgress > div > div > div > div {
+        background-color: #00c853;  /* Change to any color */
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+
 
 def convert_image(img):
     buf = BytesIO()
@@ -59,10 +58,12 @@ def get_file_bytes(upload):
         file_ext = upload.name.split(".")[-1].lower()  # e.g. "png", "jpg", "pdf"
         return upload.getvalue(), file_ext
 
-def fix_image(upload):
+def run_recognition(upload):
     try:
         start_time = time.time()
+
         progress_bar = st.sidebar.progress(0)
+
         status_text = st.sidebar.empty()
 
         status_text.text("Loading image...")
@@ -112,9 +113,9 @@ def fix_image(upload):
         # Prepare download button
         st.sidebar.markdown("\n")
         st.sidebar.download_button(
-            "Download fixed image",
+            "Download image",
             convert_image(boxed_img),
-            "fixed.png",
+            "imvoice.png",
             "image/png"
         )
 
@@ -139,11 +140,11 @@ if my_upload is not None:
     if my_upload.size > MAX_FILE_SIZE:
         st.error(f"The uploaded file is too large. Please upload a file smaller than {MAX_FILE_SIZE/1024/1024:.1f}MB.")
     else:
-        fix_image(upload=my_upload)
+        run_recognition(upload=my_upload)
 else:
     # Try default images in order of preference
     default_image = "./data/1_invoice_example.png"
     if os.path.exists(default_image):
-        fix_image(default_image)
+        run_recognition(default_image)
     else:
         st.info("Please upload an image to get started!")
