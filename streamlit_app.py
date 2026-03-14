@@ -217,7 +217,7 @@ include_full_text = st.sidebar.checkbox("Include full text in the result")
 st.sidebar.write("## 📤 Upload and download")
 
 col1, col2 = st.columns(2)
-my_upload = st.sidebar.file_uploader("Upload an invoice", type=["png", "jpg", "jpeg", "pdf"])
+my_upload = st.sidebar.file_uploader("Upload an invoice", type=["pdf", "png", "jpg", "jpeg"])
 
 if my_upload is not None:
     if my_upload.size > MAX_FILE_SIZE:
