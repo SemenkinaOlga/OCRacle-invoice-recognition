@@ -107,9 +107,6 @@ def parse_parameters():
         elif ner_engine == "🤗 mychen76/invoice-and-receipts_donut_v1":
             print("NerMethod ", ner_engine)
             ner_method = ner.NerMethod.mychen_donut
-        elif ner_engine == "🤗 to-be/donut-base-finetuned-invoices":
-            print("NerMethod ", ner_engine)
-            ner_method = ner.NerMethod.donut
 
     params = inv_rec.Parameters(pdf_converter, ocr_method, ner_method)
 
@@ -145,6 +142,8 @@ def run_recognition(upload):
 
         response = ner.run_ner(image, text, ocr_result, dp.path_model, params.nerMethod)
         result_dict = json.loads(response)
+        if include_full_text:
+            result_dict["Full text"] = text
 
         with st.expander("📄 Parsed Invoice Data", expanded=True):
             st.json(result_dict)
@@ -208,16 +207,17 @@ ocr_engine = st.sidebar.radio(
 
 ner_engine = st.sidebar.radio(
     "NER Engine",
-    options=["🧩 RegEx", "🤗 impira/layoutlm-invoices", "🤗 mychen76/invoice-and-receipts_donut_v1",
-             "🤗 to-be/donut-base-finetuned-invoices"],
+    options=["🧩 RegEx", "🤗 impira/layoutlm-invoices", "🤗 mychen76/invoice-and-receipts_donut_v1"],
     index=0,  # Default to RegEx
     help="Choose the engine for named-entity recognition"
 )
 
+include_full_text = st.sidebar.checkbox("Include full text in the result")
+
 st.sidebar.write("## 📤 Upload and download")
 
 col1, col2 = st.columns(2)
-my_upload = st.sidebar.file_uploader("Upload an invoice", type=["png", "jpg", "jpeg", "pdf"])
+my_upload = st.sidebar.file_uploader("Upload an invoice", type=["pdf", "png", "jpg", "jpeg"])
 
 if my_upload is not None:
     if my_upload.size > MAX_FILE_SIZE:
