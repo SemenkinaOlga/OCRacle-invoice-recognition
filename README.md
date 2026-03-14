@@ -38,6 +38,23 @@ and put the model file in the ```model``` folder.
 python main.py
 ```
 
+### 🌐 Streamlit Web App
+
+In addition to the command-line interface, OCRacle now includes an interactive **Streamlit web app** for uploading and processing invoices through a browser UI.
+
+#### Run locally:
+```
+streamlit run streamlit_app.py
+```
+
+Then open [http://localhost:8501](http://localhost:8501) in your browser.
+
+#### Try it online:
+
+The app is also deployed on **Streamlit Community Cloud** — no installation needed:
+
+👉 [Open OCRacle on Streamlit Cloud](https://ocracle.streamlit.app/)
+
 ### 🧰 Features
 * 📄 **Flexible PDF & Image Input** – Supports PDF (via pdf2image or PyMuPDF) and image files using Pillow.
 
@@ -61,7 +78,8 @@ python main.py
 
 * 🖼️ **Visual Annotations** – Generates images with bounding boxes (OpenCV), highlighting detected fields.
 
-
+* 🌐 **Interactive Web UI** – Browser-based interface via Streamlit for uploading invoices 
+and visualizing extracted fields.
 
 ### ⚠️ Known Issues
 * 🤖 **Mistral (LLM) Instability**
