@@ -107,9 +107,6 @@ def parse_parameters():
         elif ner_engine == "🤗 mychen76/invoice-and-receipts_donut_v1":
             print("NerMethod ", ner_engine)
             ner_method = ner.NerMethod.mychen_donut
-        elif ner_engine == "🤗 to-be/donut-base-finetuned-invoices":
-            print("NerMethod ", ner_engine)
-            ner_method = ner.NerMethod.donut
 
     params = inv_rec.Parameters(pdf_converter, ocr_method, ner_method)
 
@@ -210,8 +207,7 @@ ocr_engine = st.sidebar.radio(
 
 ner_engine = st.sidebar.radio(
     "NER Engine",
-    options=["🧩 RegEx", "🤗 impira/layoutlm-invoices", "🤗 mychen76/invoice-and-receipts_donut_v1",
-             "🤗 to-be/donut-base-finetuned-invoices"],
+    options=["🧩 RegEx", "🤗 impira/layoutlm-invoices", "🤗 mychen76/invoice-and-receipts_donut_v1"],
     index=0,  # Default to RegEx
     help="Choose the engine for named-entity recognition"
 )
