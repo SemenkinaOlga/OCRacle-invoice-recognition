@@ -12,20 +12,16 @@ import ocr as ocr
 import img_processor as imgp
 
 
-params = inv_rec.Parameters()
-
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
 
 st.set_page_config(layout="wide")
 st.title("💻️🔮✨ OCRacle-invoice-recognition")
 
 st.write("## Get data from your invoice by OCRacle")
+st.write("Try uploading an invoice to watch what OCR and NER can find.")
 st.write(
-    "Try uploading an invoice to watch what OCR and NER can find."
-)
-
-st.write(
-    "This app is open source and code available on 💻[GitHub](https://github.com/SemenkinaOlga/OCRacle-invoice-recognition). Created by 💼[Olga Semenkina](https://www.linkedin.com/in/olga-semenkina/)."
+    "This app is open source and code available on 💻[GitHub](https://github.com/SemenkinaOlga/OCRacle-invoice-recognition). "
+    "Created by 💼[Olga Semenkina](https://www.linkedin.com/in/olga-semenkina/)."
 )
 
 # Inject custom CSS to change progress bar color
@@ -36,8 +32,6 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
-
-
 
 def convert_image(img):
     buf = BytesIO()
@@ -59,8 +53,43 @@ def get_file_bytes(upload):
         file_ext = upload.name.split(".")[-1].lower()  # e.g. "png", "jpg", "pdf"
         return upload.getvalue(), file_ext
 
+def parse_parameters():
+    pdf_converter = dp.PdfConverter.pymupdf
+    ocr_method = ocr.OcrMethod.pytesseract
+    ner_method = ner.NerMethod.key_words_extractor
+
+    if pdf_engine == "🔬 PyMuPDF":
+        print("PdfConverter ", pdf_engine)
+        pdf_converter = dp.PdfConverter.pymupdf
+    elif pdf_engine == "🖼️ pdf2image":
+        print("PdfConverter ", pdf_engine)
+        pdf_converter = dp.PdfConverter.pdf2image
+
+    if ocr_engine == "🕋 Tesseract":
+        print("OcrMethod ", ocr_engine)
+        ocr_method = ocr.OcrMethod.pytesseract
+
+    if ner_engine == "🧩 RegEx":
+        print("NerMethod ", ner_engine)
+        ner_method = ner.NerMethod.key_words_extractor
+    elif ner_engine == "🤗 impira/layoutlm-invoices":
+        print("NerMethod ", ner_engine)
+        ner_method = ner.NerMethod.impra_layout
+    elif ner_engine == "🤗 mychen76/invoice-and-receipts_donut_v1":
+        print("NerMethod ", ner_engine)
+        ner_method = ner.NerMethod.mychen_donut
+    elif ner_engine == "🤗 to-be/donut-base-finetuned-invoices":
+        print("NerMethod ", ner_engine)
+        ner_method = ner.NerMethod.donut
+
+    params = inv_rec.Parameters(pdf_converter, ocr_method, ner_method)
+
+    return params
+
 def run_recognition(upload):
     try:
+        params = parse_parameters()
+
         start_time = time.time()
 
         progress_bar = st.sidebar.progress(0)
@@ -130,7 +159,29 @@ def run_recognition(upload):
         # Log the full error for debugging
         print(f"Error in fix_image: {traceback.format_exc()}")
 
-st.sidebar.write("## Settings")
+st.sidebar.title("⚙️ Settings")
+
+pdf_engine = st.sidebar.radio(
+    "PDF Processing Engine",
+    options=["🔬 PyMuPDF", "🖼️ pdf2image"],
+    index=0,  # Default to PyMuPDF
+    help="Choose the engine for PDF file processing"
+)
+
+ocr_engine = st.sidebar.radio(
+    "OCR Engine",
+    options=["🕋 Tesseract"],
+    index=0,  # Default to Tesseract
+    help="Choose the engine for optical character recognition"
+)
+
+ner_engine = st.sidebar.radio(
+    "NER Engine",
+    options=["🧩 RegEx", "🤗 impira/layoutlm-invoices", "🤗 mychen76/invoice-and-receipts_donut_v1",
+             "🤗 to-be/donut-base-finetuned-invoices"],
+    index=0,  # Default to RegEx
+    help="Choose the engine for named-entity recognition"
+)
 
 st.sidebar.write("## 📤 Upload and download")
 
