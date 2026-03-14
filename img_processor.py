@@ -61,7 +61,7 @@ def draw_boxes(img, ocr_result, words, titles_dict):
             # Draw label background
             cv2.rectangle(img_copy, (x, y - th - 6),
                           (x + tw + 4, y),
-                          (60, 200, 100), -1)
+                          (27, 166, 138), -1)
 
             # Draw label
             cv2.putText(img_copy, label,
