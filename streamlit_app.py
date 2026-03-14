@@ -24,12 +24,29 @@ st.write(
     "Created by 💼[Olga Semenkina](https://www.linkedin.com/in/olga-semenkina/)."
 )
 
+notice = st.empty()
+
 # Inject custom CSS to change progress bar color
 st.markdown("""
     <style>
     .stProgress > div > div > div > div {
-        background-color: #00c853;  /* Change to any color */
+        background-color: #1ba68a;  /* Change to any color */
     }
+    </style>
+""", unsafe_allow_html=True)
+st.markdown("""
+    <style>
+        /* Link color */
+        a {
+            color: #1ba68a !important;
+        }
+        a:hover {
+            color: #1ba68a !important;
+        }
+
+        /* JSON viewer key color */
+        .stJson .string-value { color: #1ba68a !important; }  /* string values */
+        .stJson .key { color: #1ba68a !important; }            /* keys */
     </style>
 """, unsafe_allow_html=True)
 
@@ -72,15 +89,27 @@ def parse_parameters():
     if ner_engine == "🧩 RegEx":
         print("NerMethod ", ner_engine)
         ner_method = ner.NerMethod.key_words_extractor
-    elif ner_engine == "🤗 impira/layoutlm-invoices":
-        print("NerMethod ", ner_engine)
-        ner_method = ner.NerMethod.impra_layout
-    elif ner_engine == "🤗 mychen76/invoice-and-receipts_donut_v1":
-        print("NerMethod ", ner_engine)
-        ner_method = ner.NerMethod.mychen_donut
-    elif ner_engine == "🤗 to-be/donut-base-finetuned-invoices":
-        print("NerMethod ", ner_engine)
-        ner_method = ner.NerMethod.donut
+    else:
+        notice.markdown("""
+    <div style="
+        background-color: #0c4539;
+        border-left: 4px solid #1ba68a;
+        padding: 12px 16px;
+        border-radius: 4px;
+        color: #ffffff;
+    ">
+        ⏳ First run may take a few minutes — the model will be downloaded from Hugging Face
+    </div>
+""", unsafe_allow_html=True)
+        if ner_engine == "🤗 impira/layoutlm-invoices":
+            print("NerMethod ", ner_engine)
+            ner_method = ner.NerMethod.impra_layout
+        elif ner_engine == "🤗 mychen76/invoice-and-receipts_donut_v1":
+            print("NerMethod ", ner_engine)
+            ner_method = ner.NerMethod.mychen_donut
+        elif ner_engine == "🤗 to-be/donut-base-finetuned-invoices":
+            print("NerMethod ", ner_engine)
+            ner_method = ner.NerMethod.donut
 
     params = inv_rec.Parameters(pdf_converter, ocr_method, ner_method)
 
@@ -119,6 +148,8 @@ def run_recognition(upload):
 
         with st.expander("📄 Parsed Invoice Data", expanded=True):
             st.json(result_dict)
+
+        notice.empty()
 
         status_text.text("Prepare results...")
         progress_bar.progress(90)
