@@ -145,6 +145,8 @@ def run_recognition(upload):
 
         response = ner.run_ner(image, text, ocr_result, dp.path_model, params.nerMethod)
         result_dict = json.loads(response)
+        if include_full_text:
+            result_dict["Full text"] = text
 
         with st.expander("📄 Parsed Invoice Data", expanded=True):
             st.json(result_dict)
@@ -213,6 +215,8 @@ ner_engine = st.sidebar.radio(
     index=0,  # Default to RegEx
     help="Choose the engine for named-entity recognition"
 )
+
+include_full_text = st.sidebar.checkbox("Include full text in the result")
 
 st.sidebar.write("## 📤 Upload and download")
 
