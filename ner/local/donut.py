@@ -21,11 +21,11 @@ class DonutRunner:
         # Check if model folder exists and contains config file
         if os.path.exists(os.path.join(self.save_path, "config.json")):
             print("Loading donut model from local directory.")
-            model = AutoModelForImageTextToText.from_pretrained(self.save_path)
+            model = AutoModelForImageTextToText.from_pretrained(self.save_path, use_safetensors=False)
             processor = DonutProcessor.from_pretrained(self.save_path)
         else:
             print("Model not found locally. Downloading.")
-            model = AutoModelForImageTextToText.from_pretrained(self.model_id)
+            model = AutoModelForImageTextToText.from_pretrained(self.model_id, use_safetensors=False)
             processor = DonutProcessor.from_pretrained(self.model_id)
 
             os.makedirs(self.save_path, exist_ok=True)
